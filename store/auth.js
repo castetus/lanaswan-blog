@@ -4,11 +4,20 @@ export const state = () => ({
 })
 
 export const actions = {
+    async nuxtServerInit ({ dispatch, commit }, { res }) {
+        if (res && res.locals && res.locals.user) {
+          const { allClaims: claims, idToken: token, ...authUser } = res.locals.user
+      
+          await dispatch('setUser', {
+            authUser,
+            claims,
+            token
+          })
+        }
+      },
     async googleLogin ({commit}){
-        const provider = this.$fireAuth
-        console.log(provider)
-        // const provider = this.$fireAuth.GoogleAuthProvider()
-        await this.$fireAuth.signInWithPopup()
+        const provider = new this.$fireAuthObj.GoogleAuthProvider()
+        await this.$fireAuth.signInWithPopup(provider)
     },
     async login ({ commit }, { email, password }) {
         await this.$fireAuth.signInWithEmailAndPassword(email, password)
@@ -28,6 +37,7 @@ export const actions = {
 
 export const mutations = {
     setCurrentUser (state, user){
+        console.log(user)
         state.currentUser = user.uid
         if (user.uid === 'bbsB7AV7ACZCE9iX2pXrNAAtbW93'){
             state.admin = true

@@ -10,11 +10,11 @@
       </v-btn>
       <v-card-title>
           Редактор категорий
-          <v-text-field 
-            v-model="newCategoryName" />
+          <!-- <v-text-field 
+            v-model="newCategoryName" /> -->
           <v-btn
             text
-            @click="createCategory">
+            @click="editCategory">
               Создать категорию
           </v-btn>
       </v-card-title>
@@ -24,7 +24,8 @@
                 <thead>
                     <tr>
                         <th>Название</th>
-                        <th>Slug</th>
+                        <th>Редактировать</th>
+                        <!-- <th>Slug</th> -->
                         <th>Удалить</th>
                     </tr>
                 </thead>
@@ -33,16 +34,23 @@
                         v-for="(category, n) in categories" 
                         :key="category.id">
                         <td>
-                            <v-text-field
+                            {{ category.name }}
+                            <!-- <v-text-field
                                 v-model="categories[n].name"
                                 outlined
-                                @change="updateCategoryData(category)" />
+                                @change="updateCategoryData(category)" /> -->
                         </td>
-                        <td>
+                        <!-- <td>
                             <v-text-field
                                 v-model="categories[n].slug"
                                 outlined
                                 @change="updateCategoryData(category)" />
+                        </td> -->
+                        <td>
+                            <v-icon
+                                @click="editCategory(n)">
+                                mdi-pencil
+                            </v-icon>
                         </td>
                         <td>
                             <v-icon
@@ -79,21 +87,24 @@ export default {
         removeCategory (n){
             this.$store.dispatch('categories/removeCategory', n)
         },
-        updateCategoryData (category){
-            this.$store.dispatch('categories/updateCategoryData', category)
+        editCategory (n){
+
         },
-        createCategory (name){
-            if (this.newCategoryName === ''){
-                return
-            }
-            const newCategory = {
-                id: Date.now(),
-                name: this.newCategoryName,
-                slug: this.$transliterate(this.newCategoryName)
-            }
-            this.$store.dispatch('categories/createCategory', newCategory)
-            this.newCategoryName = ''
-        },
+        // updateCategoryData (category){
+        //     this.$store.dispatch('categories/updateCategoryData', category)
+        // },
+        // createCategory (name){
+        //     if (this.newCategoryName === ''){
+        //         return
+        //     }
+        //     const newCategory = {
+        //         id: Date.now(),
+        //         name: this.newCategoryName,
+        //         slug: this.$transliterate(this.newCategoryName)
+        //     }
+        //     this.$store.dispatch('categories/createCategory', newCategory)
+        //     this.newCategoryName = ''
+        // },
         closeEditor (){
             this.$emit('closeCategoryEditor')
         }

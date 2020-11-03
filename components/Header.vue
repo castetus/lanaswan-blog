@@ -78,7 +78,7 @@
             <v-icon>mdi-login</v-icon>
           </v-list-item-icon>
             <v-list-item-title>
-              Войти на сайт
+              Вход / Регистрация
             </v-list-item-title>
         </v-list-item>
         <v-list-item
@@ -150,6 +150,7 @@ export default {
         },
         async logOut (){
           await this.$store.dispatch('auth/logOut')
+          this.drawer = false
         }
     },
 }

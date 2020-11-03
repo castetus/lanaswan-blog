@@ -177,6 +177,9 @@ export default {
         categories (){
             return this.$store.state.categories.categories
         },
+        isAdmin (){
+            return this.$store.getters['auth/admin']
+        }
     },
     async fetch (){
         if (this.$route.query.id){
@@ -196,6 +199,11 @@ export default {
             this.post = Object.assign({}, currentPost)
         }
     },
+    // mounted (){
+    //     if (!this.isAdmin){
+    //         this.$router.push('/')
+    //     }
+    // },
     methods: {
         exitEditor (){
             if (this.post.slug.length){
@@ -205,6 +213,9 @@ export default {
             }
         },
         async savePost (){
+            if (!this.isAdmin){
+                return
+            }
             this.preparePost(this.post)
             try {
                 await this.$store.dispatch('posts/savePost', this.post)

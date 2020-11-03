@@ -12,9 +12,9 @@ const firebaseConfig = {
 
 // let app = null
 // // prevent initializing firebase more than once
-// if (!firebase.apps.length) { 
-firebase.initializeApp(firebaseConfig)
-// }
+if (!firebase.apps.length) { 
+    firebase.initializeApp(firebaseConfig)
+}
 // inject it so it can be accessed as this.$firebase inside the project
 export default (ctx, inject) => {
   inject('firebase', firebase)
