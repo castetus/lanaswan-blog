@@ -1,0 +1,68 @@
+// variables
+
+$base-color: #755a57;
+
+a{
+    text-decoration: none;
+    color: inherit;
+    color: $base-color;
+}
+
+// $mobile: 575px;
+// $tablets: 767px;
+// $desktop: 1024px;
+
+// $shadow: 0 2px 5px 0 rgba(0,0,0,.16);
+// $shadow-active: 0 5px 11px 0 rgba(0,0,0,0.18), 0 4px 15px 0 rgba(0,0,0,0.15);
+
+// base styles
+
+// .container{
+//     display: flex;
+//     margin: 0 auto;
+//     flex-wrap: wrap;
+//     &_adaptive{
+//         flex-direction: column;
+//         @media screen and (min-width: $tablets){
+//             flex-direction: row;
+//             flex-wrap: wrap;
+//         }
+//         @media screen and (min-width: $desktop){
+//             flex-direction: row;
+//             flex-wrap: nowrap;
+//         }
+//     }
+//     &_padding{
+//         padding: 0 0.5rem;
+//     }
+//     &_reverse{
+//         flex-direction: column-reverse;
+//         @media screen and (min-width: $tablets){
+//             flex-direction: row;
+//         }
+//     }
+//     &_no-wrap{
+//         @media screen and (min-width: $tablets){
+//             flex-wrap: nowrap;
+//         }
+//     }
+//     &_full-width{
+//         width: 100%;
+//     }
+//     @media screen and (min-width: 576px){
+//         max-width: 540px;
+//     }
+//     @media screen and (min-width: $tablets){
+//         max-width: 720px;
+//         padding: 0;
+//     }
+//     @media screen and (min-width: 992px){
+//         max-width: 960px;
+//         padding: 0;
+//     }
+//     @media screen and (min-width: 1200px){
+//         max-width: 1140px;
+//         padding: 0;
+//         flex-direction: row;
+//     }
+// }
