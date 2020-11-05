@@ -1,28 +1,12 @@
 export const state = () => ({
-    categories: [
-        {
-            id: 1,
-            slug: 'category-1',
-            name: 'Категория 1'
-        },
-        {
-            id: 2,
-            slug: 'category-2',
-            name: 'Категория 2'
-        },
-        {
-            id: 3,
-            slug: 'category-3',
-            name: 'Категория 3'
-        },
-    ]
+    categories: []
 })
 
 export const actions = {
     async removeCategory ({commit, state}, n){
         const catId = state.categories[n].id
         try {
-            await this.$fireDb.ref('categories/' + catId).remove()
+            await this.$firebase.database().ref('categories/' + catId).remove()
             commit('removeCategory', n)
         } catch (error) {
             console.log(error)
@@ -30,7 +14,7 @@ export const actions = {
     },
     async updateCategoryData ({commit}, category){
         try {
-            await this.$fireDb.ref('categories/' + category.id).update({
+            await this.$firebase.database().ref('categories/' + category.id).update({
                 name: category.name,
                 slug: category.slug
             })
@@ -41,7 +25,7 @@ export const actions = {
     },
     async createCategory ({commit}, category){
         try {
-            await this.$fireDb.ref('categories/' + category.id).set({
+            await this.$firebase.database().ref('categories/' + category.id).set({
                 id: category.id,
                 name: category.name,
                 slug: category.slug

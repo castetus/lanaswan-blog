@@ -7,9 +7,9 @@ export const state = () => ({
 export const actions = {
     async savePost ({commit, dispatch}, post){
         if (post.img){
-            const imgRef = await this.$fireStorage.ref('postImgs/' + post.id)
+            const imgRef = await this.$firebase.storage().ref('postImgs/' + post.id)
             imgRef.getDownloadURL().then((url) => {
-                this.$fireStorage.ref('postImgs/' + post.id).delete()
+                this.$firebase.storage().ref('postImgs/' + post.id).delete()
                 dispatch('savePostImg', post)
             }).catch((err) => {
                 if (err.code === 'storage/object-not-found'){
@@ -21,7 +21,7 @@ export const actions = {
         }
 
         try {
-            await this.$fireDb.ref('allPosts/' + post.id).set({
+            await this.$firebase.database().ref('allPosts/' + post.id).set({
                 id: post.id,
                 slug: post.slug,
                 type: post.type,
@@ -29,7 +29,7 @@ export const actions = {
                 categories: post.categories,
                 excerpt: post.excerpt,
             })
-            await this.$fireDb.ref('posts/' + post.id).set({
+            await this.$firebase.database().ref('posts/' + post.id).set({
                 type: post.type,
                 id: post.id,
                 slug: post.slug,
@@ -40,10 +40,10 @@ export const actions = {
                 content: post.content,
                 metaTitle: post.metaTitle,
                 metaDescription: post.metaDescription,
-                imgUrl: this.$fireStorage.ref('postImgs/' + post.id).getDownloadURL()
+                imgUrl: this.$firebase.storage().ref('postImgs/' + post.id).getDownloadURL()
             })
             for (const cat of post.categories){
-                await this.$fireDb.ref('categories/' + cat + '/posts').update({
+                await this.$firebase.database().ref('categories/' + cat + '/posts').update({
                     postId: post.id
                 })
             }
@@ -54,12 +54,12 @@ export const actions = {
     },
     async savePostImg ({dispatch}, post){
         if (post.img && post.img !== null){
-            await this.$fireStorage.ref('postImgs/' + post.id).put(post.img)
+            await this.$firebase.storage().ref('postImgs/' + post.id).put(post.img)
         }
     },
     async loadAllPosts ({commit}){
         // try {
-        //     const posts = await (await this.$fireDb.ref('allPosts').once('value')).val()
+        //     const posts = await (await this.$firebase.database().ref('allPosts').once('value')).val()
         //     commit('loadAllPosts', posts)
         // } catch (error) {
         //     console.log(error)
@@ -67,11 +67,11 @@ export const actions = {
     },
     async removePost ({commit}, args){
         try {
-            await this.$fireDb.ref('allPosts/' + args.postId).remove()
-            await this.$fireDb.ref('posts/' + args.postId).remove()
-            await this.$fireStorage.ref('postImgs/' + args.postId).delete()
+            await this.$firebase.database().ref('allPosts/' + args.postId).remove()
+            await this.$firebase.database().ref('posts/' + args.postId).remove()
+            await this.$firebase.storage().ref('postImgs/' + args.postId).delete()
             for (const catId of args.catsIds){
-                await this.$fireDb.ref('categories/' + catId + '/posts/' + args.postId).remove()
+                await this.$firebase.database().ref('categories/' + catId + '/posts/' + args.postId).remove()
             }
             commit('removePost', args)
         } catch (error) {
@@ -80,8 +80,8 @@ export const actions = {
     },
     async loadSinglePost ({commit}, postId){
         try {
-            const post = await (await this.$fireDb.ref('posts/' + postId).once('value')).val()
-            let comments = await (await this.$fireDb.ref('comments/' + postId + '/comments').once('value')).val()
+            const post = await (await this.$firebase.database().ref('posts/' + postId).once('value')).val()
+            let comments = await (await this.$firebase.database().ref('comments/' + postId + '/comments').once('value')).val()
             if (!comments){
                 comments = []
             }
@@ -93,7 +93,7 @@ export const actions = {
     },
     async getImg ({commit}, postId){
         try {
-            const ref = await this.$fireStorage.ref('postImgs/' + postId)
+            const ref = await this.$firebase.storage().ref('postImgs/' + postId)
             const url = await ref.getDownloadURL()
             commit('imgUrl', url)
         } catch (error) {
@@ -106,12 +106,12 @@ export const actions = {
             date: data.date,
             text: data.text
         }
-        comment.userName = await (await this.$fireDb.ref('users/' + currentUser + '/name').once('value')).val()
-        comment.avatarUrl = await this.$fireStorage.ref('users/' + currentUser).getDownloadURL()
+        comment.userName = await (await this.$firebase.database().ref('users/' + currentUser + '/name').once('value')).val()
+        comment.avatarUrl = await this.$firebase.storage().ref('users/' + currentUser).getDownloadURL()
         commit('addComment', comment)
         const comments = state.currentPost.comments
         try {
-            await this.$fireDb.ref('comments/' + data.postId).update({
+            await this.$firebase.database().ref('comments/' + data.postId).update({
                 comments
             })
         } catch (error) {

@@ -3,6 +3,7 @@
   <v-card
    class="mx-auto"
     max-width="320">
+    <div class="card-heading-wrapper">
     <v-skeleton-loader
         v-if="!isLoaded"
       class="mx-auto"
@@ -10,11 +11,12 @@
       <v-img  
         v-else
         :src="imgUrl"
-        height="200px">
-        <v-card-title class="v-card__title_white">
+        height="200px" />
+        <v-card-title 
+            class="v-card__title_white">
             {{ post.title }}
         </v-card-title>
-    </v-img>
+        </div>
       <v-card-text v-html="post.excerpt" />
       <v-card-actions>
           <nuxt-link :to="`/posts/${post.slug}`">
@@ -39,17 +41,17 @@ export default {
     props: ['post'],
     async fetch (){
         try {
-            const ref = await this.$fireStorage.ref('postImgs/' + this.post.id)
+            const ref = await this.$firebase.storage().ref('postImgs/' + this.post.id)
             const url = await ref.getDownloadURL()
             this.imgUrl = url
             this.isLoaded = true
         } catch (error) {
-            console.log('3' + error)
+            console.log('3' + error.code)
         }
     },
     fetchOnServer: false,
 }
-// dummy comment
+
 </script>
 
 <style>
@@ -61,8 +63,14 @@ export default {
         word-break: normal;
         color: #fff;
         align-items: flex-end;
+        position: absolute;
+        right: 0;
+        bottom: 0;
     }
     .v-responsive__content{
         display: flex;
+    }
+    .card-heading-wrapper{
+        position: relative;
     }
 </style>

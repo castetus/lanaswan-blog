@@ -16,7 +16,7 @@ export default {
   },
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
-    // '~plugins/firebase.js',
+    '~plugins/firebase.js',
     // {src: '~plugins/modal', ssr: false},
     '~plugins/vue-wysiwyg',
     '~plugins/functions',
@@ -69,42 +69,42 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/style-resources',
     '@nuxtjs/pwa',
-    [
-      '@nuxtjs/firebase',
-      {
-        config: {
-          apiKey: 'AIzaSyAkYDMtQ7X_Twvv-H6GOlX4glTglMHgGtQ',
-          authDomain: 'lanaswan-f2a0b.firebaseapp.com',
-          databaseURL: 'https://lanaswan-f2a0b.firebaseio.com',
-          projectId: 'lanaswan-f2a0b',
-          storageBucket: 'lanaswan-f2a0b.appspot.com',
-          messagingSenderId: '52629460309',
-          appId: '1:52629460309:web:68d52f39bd9e814cc74bdc'
-        },
-        services: {
-          auth: {
-            ssr: true
-          },
-          realtimeDb: true,
-          storage: true,
-        }
-      },
-    ]
+    // [
+    //   '@nuxtjs/firebase',
+    //   {
+    //     config: {
+    //       apiKey: 'AIzaSyAkYDMtQ7X_Twvv-H6GOlX4glTglMHgGtQ',
+    //       authDomain: 'lanaswan-f2a0b.firebaseapp.com',
+    //       databaseURL: 'https://lanaswan-f2a0b.firebaseio.com',
+    //       projectId: 'lanaswan-f2a0b',
+    //       storageBucket: 'lanaswan-f2a0b.appspot.com',
+    //       messagingSenderId: '52629460309',
+    //       appId: '1:52629460309:web:68d52f39bd9e814cc74bdc'
+    //     },
+    //     services: {
+    //       auth: {
+    //         ssr: true
+    //       },
+    //       realtimeDb: true,
+    //       storage: true,
+    //     }
+    //   },
+    // ]
   ],
-  pwa: {
-    meta: false,
-    icon: false,
+  // pwa: {
+  //   meta: false,
+  //   icon: false,
 
-    workbox: {
-      importScripts: [
-        // ...
-        '/firebase-auth-sw.js'
-      ],
-      // by default the workbox module will not install the service worker in dev environment to avoid conflicts with HMR
-      // only set this true for testing and remember to always clear your browser cache in development
-      dev: false
-    }
-  },
+  //   workbox: {
+  //     importScripts: [
+  //       // ...
+  //       '/firebase-auth-sw.js'
+  //     ],
+  //     // by default the workbox module will not install the service worker in dev environment to avoid conflicts with HMR
+  //     // only set this true for testing and remember to always clear your browser cache in development
+  //     dev: false
+  //   }
+  // },
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {},
 

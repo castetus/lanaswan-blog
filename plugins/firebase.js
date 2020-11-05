@@ -1,4 +1,8 @@
-import firebase from 'firebase'
+/* eslint-disable */
+import * as firebase from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/storage'
+
 
 const firebaseConfig = {
     apiKey: 'AIzaSyAkYDMtQ7X_Twvv-H6GOlX4glTglMHgGtQ',
@@ -10,12 +14,13 @@ const firebaseConfig = {
     appId: '1:52629460309:web:68d52f39bd9e814cc74bdc'
 }
 
-// let app = null
+let app = null
 // // prevent initializing firebase more than once
 if (!firebase.apps.length) { 
-    firebase.initializeApp(firebaseConfig)
+    app = firebase.initializeApp(firebaseConfig)
 }
 // inject it so it can be accessed as this.$firebase inside the project
 export default (ctx, inject) => {
   inject('firebase', firebase)
 }
+// export default firebase
