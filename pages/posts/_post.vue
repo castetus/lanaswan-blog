@@ -77,7 +77,6 @@ export default {
 
         }
     },
-
     computed: {
         admin (){
           return this.$store.state.auth.admin
@@ -96,7 +95,7 @@ export default {
         }
     },
     
-    async created (){
+    async fetch (){
         await this.$store.dispatch('posts/loadSinglePost', this.postId)
     },
     head () { 
@@ -110,7 +109,7 @@ export default {
     methods: {
       editPost (){
         this.$router.push({path: '/posteditor', query: {id: this.post.id}})
-      }
+      },
     }
 }
 </script>

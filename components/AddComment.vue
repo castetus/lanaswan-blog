@@ -1,21 +1,25 @@
 <template>
   <div class="add-comment">
-      <v-form>
-          <v-btn 
-            @click="googleLogin">
-              Войти с аккаунтом Google
-          </v-btn>
-      </v-form>
-      <v-form>
+        <div 
+            v-if="!currentUser">
+                Для комментирования необходимо
+                <a @click.prevent="loginForm=true">
+                    войти или зарегистрироваться
+                </a>
+        </div>
+      <v-form v-else>
           <v-textarea 
             placeholder="Ваш комментарий"
-            v-model="comment.text" />
+            v-model="text" />
             <v-btn
                 @click="saveComment"
                 text>
                 Отправить    
             </v-btn>
       </v-form>
+        <v-dialog v-model="loginForm" max-width="400">
+            <login-form @close-login="loginForm = false" />
+        </v-dialog>
   </div>
 </template>
 
@@ -25,30 +29,36 @@ export default {
     props: ['postId'],
     data (){
         return {
-            comment: {
-                text: ''
-            },
+            text: '',
+            loginForm: false,
+        }
+    },
+    computed: {
+        currentUser (){
+            return this.$store.getters['auth/currentUser']
         }
     },
     methods: {
         async saveComment (){
-            if (this.comment.text === ''){
+            if (this.text === ''){
                 return
             }
+            const options = {
+                year: 'numeric', 
+                month: 'numeric', 
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+            }
+            const date = new Intl.DateTimeFormat('ru', options).format(new Date())
             const data = {
                 postId: this.postId,
-                comment: this.comment
+                date: date,
+                text: this.text
             }
             await this.$store.dispatch('posts/saveComment', data)
-            this.comment.text = ''
+            this.text = ''
         },
-        async googleLogin (){
-            try {
-                await this.$store.dispatch('auth/googleLogin')
-            } catch (error) {
-                console.log(error)
-            }
-        }
     }
 }
 </script>

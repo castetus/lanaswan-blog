@@ -91,7 +91,7 @@
                     placeholder="Категории">
                         <template v-slot:prepend-item>
                         <v-dialog
-                            v-model="catEditor">
+                            v-model="catList">
                                 <template v-slot:activator="{ on, attrs }">
                                     <v-btn
                                         v-bind="attrs"
@@ -101,8 +101,8 @@
                                         Управление категориями
                                     </v-btn>
                                 </template>
-                                <category-editor 
-                                    @closeCategoryEditor="catEditor=false"/>
+                                <categories-list 
+                                    @closeCategoryEditor="catList=false"/>
                             </v-dialog>
                         </template>
                     </v-select>
@@ -146,17 +146,17 @@
 
 <script>
 import Editor from '@tinymce/tinymce-vue'
-import CategoryEditor from '../components/CategoryEditor'
+import CategoriesList from '../components/CategoriesList'
 
 export default {
     components: {
-        CategoryEditor,
+        CategoriesList,
         Editor
     },
     data (){
         return {
             menu: false,
-            catEditor: false,
+            catList: false,
             imgUrl: '',
             post: {
                 type: 'post',
@@ -219,8 +219,13 @@ export default {
             this.preparePost(this.post)
             try {
                 await this.$store.dispatch('posts/savePost', this.post)
+                const type = 'success'
+                const message = 'Пост сохранен'
+                this.$store.dispatch('alert/showAlert', {type, message})
             } catch (error) {
-                console.log(error)
+                const type = 'error'
+                const message = 'Что-то пошло не так. Обратитесь к разработчику.'
+                this.$store.dispatch('alert/showAlert', {type, message})
             }
         },
         async removePost (){

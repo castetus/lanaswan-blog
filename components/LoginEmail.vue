@@ -1,5 +1,6 @@
 <template>
-    <v-form @submit.prevent="onSubmit">
+  <v-card>
+    <v-form>
       <v-card-text>
       <v-text-field 
         v-model="email"
@@ -8,26 +9,28 @@
       <v-text-field 
         v-model="password"
         label="Пароль"
+        type="password"
         required />
       </v-card-text>
       <v-card-actions>
       <v-btn
         text
-        type="submit">
+        @click="login">
         Вход
       </v-btn>
       <v-btn
-        @click="$emit('closeLoginForm')"
+        @click="$emit('close-form')"
         text>
         Отмена
       </v-btn>
       </v-card-actions>
     </v-form>
+  </v-card>
 </template>
 
 <script>
 export default {
-    name: 'ls-login',
+    name: 'login-email',
     data (){
         return {
             email: '',
@@ -35,9 +38,18 @@ export default {
         }
     },
     methods: {
-        onSubmit (){
-            this.$emit('loginSubmit', this.email, this.password)
-        }
+        async login (){
+          const email = this.email
+          const password = this.password
+            try {
+                await this.$store.dispatch(('auth/login'), {email, password})
+                this.$store.dispatch('auth/setUser')
+                this.$emit('close-form')
+                this.$emit('close-login')
+            } catch (error) {
+                this.errorCode = error.code
+            }
+        },
     }
 }
 </script>

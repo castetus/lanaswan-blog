@@ -1,5 +1,6 @@
 <template>
     <v-container>
+      <h1>{{ category.name }}</h1>
     <v-row>
       <post-card 
         v-for="post in posts" 

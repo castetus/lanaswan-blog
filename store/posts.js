@@ -1,6 +1,7 @@
 export const state = () => ({
     posts: [],
-    currentPost: {}
+    currentPost: {},
+    test: false
 })
 
 export const actions = {
@@ -27,12 +28,7 @@ export const actions = {
                 title: post.title,
                 categories: post.categories,
                 excerpt: post.excerpt,
-                // imgUrl: this.$fireStorage.ref('postImgs/' + post.id).getDownloadURL()
             })
-            // if (post.img && post.img !== null){
-            //     await this.$fireStorage.ref('postImgs/' + post.id).put(post.img)
-            // }
-            // await dispatch('savePostImg', post)
             await this.$fireDb.ref('posts/' + post.id).set({
                 type: post.type,
                 id: post.id,
@@ -61,11 +57,6 @@ export const actions = {
             await this.$fireStorage.ref('postImgs/' + post.id).put(post.img)
         }
     },
-    // async deletePostImg (postId){
-    //     console.log(postId)
-    //         const ref = await this.$fireStorage.ref('postImgs/' + postId)
-    //         await ref.delete()
-    //     },
     async loadAllPosts ({commit}){
         // try {
         //     const posts = await (await this.$fireDb.ref('allPosts').once('value')).val()
@@ -82,7 +73,6 @@ export const actions = {
             for (const catId of args.catsIds){
                 await this.$fireDb.ref('categories/' + catId + '/posts/' + args.postId).remove()
             }
-            console.log(args)
             commit('removePost', args)
         } catch (error) {
             console.log(error)
@@ -110,10 +100,16 @@ export const actions = {
             console.log(error)
         }
     },
-    async saveComment ({state, commit}, data){
-        commit('addComment', data.comment)
+    async saveComment ({state, rootState, commit}, data){
+        const currentUser = rootState.auth.currentUser
+        const comment = {
+            date: data.date,
+            text: data.text
+        }
+        comment.userName = await (await this.$fireDb.ref('users/' + currentUser + '/name').once('value')).val()
+        comment.avatarUrl = await this.$fireStorage.ref('users/' + currentUser).getDownloadURL()
+        commit('addComment', comment)
         const comments = state.currentPost.comments
-        console.log(comments)
         try {
             await this.$fireDb.ref('comments/' + data.postId).update({
                 comments
@@ -121,7 +117,7 @@ export const actions = {
         } catch (error) {
             console.log(error)
         }
-    }
+    },
 }
 
 export const mutations = {
@@ -137,7 +133,6 @@ export const mutations = {
         state.posts = posts
     },
     removePost (state, args){
-        console.log(args)
         const postIndex = state.posts.findIndex(post => post.id === args.postId)
         state.posts.splice(postIndex, 1)
     },
@@ -148,8 +143,8 @@ export const mutations = {
         state.imgUrl = url
     },
     addComment (state, comment){
-        state.currentPost.comments.push(comment)
-    }
+        state.currentPost.comments.unshift(comment)
+    },
 }
 
 export const getters = {
