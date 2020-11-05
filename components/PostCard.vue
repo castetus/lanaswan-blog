@@ -49,6 +49,7 @@ export default {
     },
     fetchOnServer: false,
 }
+// dummy comment
 </script>
 
 <style>
