@@ -101,13 +101,16 @@ export const actions = {
         }
     },
     async saveComment ({state, rootState, commit}, data){
-        const currentUser = rootState.auth.currentUser
+        // const currentUserId = rootState.auth.currentUserId
         const comment = {
             date: data.date,
             text: data.text
         }
-        comment.userName = await (await this.$firebase.database().ref('users/' + currentUser + '/name').once('value')).val()
-        comment.avatarUrl = await this.$firebase.storage().ref('users/' + currentUser).getDownloadURL()
+        // comment.userName = await (await this.$firebase.database().ref('users/' + currentUser.id + '/name').once('value')).val()
+        // comment.avatarUrl = await this.$firebase.storage().ref('users/' + currentUser.id).getDownloadURL()
+        const user = this.$firebase.auth().currentUser
+        comment.userName = user.displayName
+        comment.avatarUrl = user.photoURL
         commit('addComment', comment)
         const comments = state.currentPost.comments
         try {

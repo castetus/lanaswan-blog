@@ -1,7 +1,7 @@
 <template>
   <div class="add-comment">
         <div 
-            v-if="!currentUser">
+            v-if="!currentUserId">
                 Для комментирования необходимо
                 <a @click.prevent="loginForm=true">
                     войти или зарегистрироваться
@@ -34,8 +34,8 @@ export default {
         }
     },
     computed: {
-        currentUser (){
-            return this.$store.getters['auth/currentUser']
+        currentUserId (){
+            return this.$store.getters['auth/currentUserId']
         }
     },
     methods: {

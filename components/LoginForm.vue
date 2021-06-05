@@ -81,8 +81,18 @@ export default {
         emailLogin (){
             this.email = true
         },
-        googleLogin (){
-            this.$store.dispatch('auth/googleLogin')
+        async googleLogin (){
+            try {
+                await this.$store.dispatch('auth/googleLogin')
+                this.$emit('close-login')
+                const type = 'success'
+                const message = 'Вы успешно авторизовались!'
+                this.$store.dispatch('alert/showAlert', {type, message})
+            } catch (error) {
+                const message = error.code
+                const type = 'error'
+                this.$store.dispatch('alert/showAlert', {type, message})
+            }
         },
         phoneLogin (){
             // this.$store.dispatch('auth/')

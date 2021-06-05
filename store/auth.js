@@ -1,5 +1,5 @@
 export const state = () => ({
-    currentUser: null,
+    currentUserId: null,
     admin: false,
 })
 
@@ -17,7 +17,7 @@ export const actions = {
       },
     async googleLogin ({commit}){
         const provider = new this.$firebase.auth.GoogleAuthProvider()
-        await this.$fireAuth.signInWithPopup(provider)
+        await this.$firebase.auth().signInWithPopup(provider)
     },
     async login ({ commit }, { email, password }) {
         await this.$firebase.auth().signInWithEmailAndPassword(email, password)
@@ -25,32 +25,44 @@ export const actions = {
     setUser ({ commit }){
         this.$firebase.auth().onAuthStateChanged((user) => {
             if (user){
-                commit('setCurrentUser', user)
+                commit('setCurrentUserId', user)
             }
         })
     },
     async logOut ({commit}) {
         await this.$firebase.auth().signOut()
         commit('logOut')
+    },
+    async emailRegister ({ commit }, { email, password, name, avatar }) {
+      const newUser = await this.$firebase.auth()
+        .createUserWithEmailAndPassword(email, password)
+        .catch(error => console.log(error.code))
+      await this.$firebase.storage().ref(`users/${newUser.user.uid}`).put(avatar)
+      const imgUrl = await this.$firebase.storage().ref(`users/${newUser.user.uid}`).getDownloadURL()
+      const currentUser = this.$firebase.auth().currentUser
+      currentUser.updateProfile({
+        displayName: name,
+        photoURL: imgUrl
+      })
+      commit('setCurrentUserId', newUser.user)
     }
 }
 
 export const mutations = {
-    setCurrentUser (state, user){
-        console.log(user)
-        state.currentUser = user.uid
+    setCurrentUserId (state, user){
+        state.currentUserId = user.uid
         if (user.uid === 'bbsB7AV7ACZCE9iX2pXrNAAtbW93'){
             state.admin = true
         }
     },
     logOut (state){
-        state.currentUser = null
+        state.currentUserId = null
         state.admin = false
     }
 }
 
 export const getters = {
-    isAuth (state){
-        return state.currentUser
-    }
+    currentUserId (state){
+        return state.currentUserId
+    },
 }

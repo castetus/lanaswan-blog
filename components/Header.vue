@@ -50,7 +50,7 @@
         </v-list-item-group>
         <v-divider />
         <v-list-item 
-          v-if="!currentUser" 
+          v-if="!currentUserId" 
           @click="login">
           <v-list-item-icon>
             <v-icon>mdi-login</v-icon>
@@ -93,20 +93,11 @@ export default {
     }
   },
   computed: {
-    errorMessage () {
-      let message = ''
-      if (this.errorCode === 'auth/user-not-found') {
-        message = 'Пользователь с таким E-mail не найден'
-      } else if (this.errorCode === 'auth/wrong-password') {
-        message = 'Неверный пароль'
-      }
-      return message
-    },
     categories () {
       return this.$store.getters['categories/allCategories']
     },
-    currentUser () {
-      return this.$store.getters['auth/currentUser']
+    currentUserId () {
+      return this.$store.getters['auth/currentUserId']
     },
     pages () {
       return this.$store.getters['posts/allPosts'].filter(
@@ -121,6 +112,9 @@ export default {
     async logOut () {
       await this.$store.dispatch('auth/logOut')
       this.drawer = false
+      const type = 'info'
+      const message = 'Вы вышли с сайта'
+      this.$store.dispatch('alert/showAlert', {type, message})
     },
     login (){
       this.drawer = false

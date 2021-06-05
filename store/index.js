@@ -10,5 +10,8 @@ export const actions = {
         } catch (error) {
             console.log(error)
         }
+    },
+    test (){
+        console.log('test')
     }
 }

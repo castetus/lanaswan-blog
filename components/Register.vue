@@ -70,10 +70,9 @@ export default {
                 await this.$store.dispatch('auth/emailRegister', {email, password, name, avatar})
                 this.$emit('close-login')
             } catch (error) {
-                // const type = 'error'
-                // const message = error.code
-                // this.$store.dispatch('alert/showAlert', {type, message})
-                console.log(error)
+                const type = 'error'
+                const message = error.code
+                this.$store.dispatch('alert/showAlert', {type, message})
             }
         }
     }

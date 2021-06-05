@@ -16,6 +16,7 @@ module.exports = {
   // add your custom rules here
   rules: {
     'comma-dangle': 'off',
+    'no-console': 'off',
     'object-shorthand': 'off',
     'indent': 'off',
     'vue/html-indent': 'off',
