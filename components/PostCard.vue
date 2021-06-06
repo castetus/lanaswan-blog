@@ -55,6 +55,9 @@ export default {
 </script>
 
 <style>
+.v-card{
+  height: 100%;
+}
     .v-card__text{
         text-align: justify;
     }
